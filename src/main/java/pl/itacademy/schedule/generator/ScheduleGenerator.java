@@ -9,17 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static java.time.temporal.ChronoUnit.MINUTES;
+
 public class ScheduleGenerator implements IScheduleGenerator {
 
     @Override
     public Schedule generateSchedule(EnteredParameters enteredParameters) {
         LocalTime beginTime = enteredParameters.getBeginTime();
         LocalTime endTime = enteredParameters.getEndTime();
-        //Period period = Period.between(endTime,beginTime);
-        int lessonLength = endTime.getHour() - beginTime.getHour();
+        long lessonLength = MINUTES.between(beginTime, endTime);
         Set<DayOfWeek> lessonDays = enteredParameters.getLessonDays();
-        int requiredHours = enteredParameters.getRequiredHours();
-        int usedHours = 0;
+        int requiredHours = enteredParameters.getRequiredHours() * 60;
+        long usedHours = 0;
         LocalDate currentDate = enteredParameters.getStartDate();
         List<Lesson> lessons = new ArrayList<>();
         do {
@@ -32,7 +33,7 @@ public class ScheduleGenerator implements IScheduleGenerator {
             currentDate = currentDate.plusDays(1);
         } while (usedHours < requiredHours);
 
-        LocalTime lastLessonEndTime = endTime.minusHours(usedHours - requiredHours);
+        LocalTime lastLessonEndTime = endTime.minusMinutes(usedHours - requiredHours);
         Lesson lastLesson = lessons.get(lessons.size() - 1);
         lastLesson.setEndTime(lastLessonEndTime);
 

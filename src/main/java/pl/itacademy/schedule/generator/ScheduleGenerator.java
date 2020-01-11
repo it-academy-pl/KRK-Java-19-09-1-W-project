@@ -1,5 +1,6 @@
 package pl.itacademy.schedule.generator;
 
+import pl.itacademy.schedule.holidays.HolidayChecker;
 import pl.itacademy.schedule.parameters.EnteredParameters;
 
 import java.time.DayOfWeek;
@@ -12,6 +13,12 @@ import java.util.Set;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class ScheduleGenerator implements IScheduleGenerator {
+
+    private HolidayChecker holidayChecker;
+
+    public ScheduleGenerator(HolidayChecker holidayChecker) {
+        this.holidayChecker = holidayChecker;
+    }
 
     @Override
     public Schedule generateSchedule(EnteredParameters enteredParameters) {
